@@ -16,8 +16,8 @@ class Resultado extends StatelessWidget {
       );
     }
 
-    if (provider.pokemonSelecionado != null) {
-      final pokemon = provider.pokemonSelecionado!;
+    if (provider.pokemonNome != null) {
+      final pokemon = provider.pokemonNome!;
 
       return ListView(
         children: [
@@ -45,6 +45,7 @@ class Resultado extends StatelessWidget {
                     },
                   ),
                 );
+                provider.limparPokemonSelecionado(); 
               },
             ),
           ),
@@ -70,6 +71,20 @@ class Resultado extends StatelessWidget {
               subtitle: Text(
                 'Tipo: ${pokemon['tipo']}',
               ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return TelaDetalhesPokemon(
+                        idPokemon: pokemon['id'],
+                      );
+                    },
+                  ),
+                );
+                provider.limparPokemonSelecionado();
+              },
             ),
           );
         },
@@ -93,6 +108,20 @@ class Resultado extends StatelessWidget {
             subtitle: Text(
               'Tipo: ${pokemon['tipo']}',
             ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TelaDetalhesPokemon(
+                      idPokemon: pokemon['id'],
+                    );
+                  },
+                ),
+              );
+              provider.limparPokemonSelecionado();
+            },
           ),
         );
       },

@@ -7,6 +7,7 @@ class PokemonProvider extends ChangeNotifier {
   List<dynamic> pokemonsTipo = [];
 
   Map<String, dynamic>? pokemonSelecionado;
+  Map<String, dynamic>? pokemonNome;
 
   bool carregando = false;
   bool carregandoEspecifico = false;
@@ -16,7 +17,7 @@ class PokemonProvider extends ChangeNotifier {
     carregando = true;
 
     // Limpa pesquisas anteriores
-    pokemonSelecionado = null;
+    pokemonNome = null;
     pokemonsTipo = [];
 
     notifyListeners();
@@ -32,7 +33,7 @@ class PokemonProvider extends ChangeNotifier {
     carregandoTipo = true;
 
     // Limpa pesquisas anteriores
-    pokemonSelecionado = null;
+    pokemonNome = null;
     pokemons = [];
 
     notifyListeners();
@@ -67,19 +68,23 @@ class PokemonProvider extends ChangeNotifier {
   ) async {
     carregandoEspecifico = true;
 
-    // Limpa pesquisas anteriores
-    pokemonSelecionado = null;
+    pokemonNome = null;
     pokemons = [];
     pokemonsTipo = [];
 
     notifyListeners();
 
-    pokemonSelecionado = await PokemonService.buscarDetalhesNome(
+    pokemonNome = await PokemonService.buscarDetalhesNome(
       nome,
     );
 
     carregandoEspecifico = false;
 
+    notifyListeners();
+  }
+
+  void limparPokemonSelecionado() {
+    pokemonSelecionado = null;
     notifyListeners();
   }
 }

@@ -22,6 +22,20 @@ class PokemonService {
     );
   }
 
+  static Future<List<dynamic>> buscarPokemonsTipo(String tipo) async {
+    final resposta = await http.get(
+      Uri.parse('$url/$tipo')
+    );
+
+    if(resposta.statusCode == 200){
+      return jsonDecode(resposta.body);
+    }
+
+    throw Exception(
+      'Erro ao buscar Pokémon',
+    );
+  }
+
   // BUSCAR UM POKÉMON
   static Future<Map<String, dynamic>> buscarDetalhes(int id) async {
     final resposta = await http.get(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pokemonapp/widgets/resultado.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/pokemon_provider.dart';
-import 'tela_detalhes_pokemon.dart';
 
 class TelaPokemon extends StatelessWidget {
   const TelaPokemon({
@@ -13,9 +13,7 @@ class TelaPokemon extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<PokemonProvider>();
 
-    dynamic pokemonEspecifico;
-
-    TextEditingController controllerNome = TextEditingController();
+    TextEditingController controller = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,119 +26,60 @@ class TelaPokemon extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: controllerNome,
+              controller: controller,
               decoration: const InputDecoration(
-                labelText: 'Nome do Pokémon',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+                labelText: 'Nome / Tipo do Pokémon',
+                border: OutlineInputBorder(),
               ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final nomeBusca = controller.text.trim().toLowerCase();
+
+                      if (nomeBusca.isNotEmpty) {
+                        context
+                            .read<PokemonProvider>()
+                            .carregarDetalhesNome(nomeBusca);
+                      }
+                    },
+                    child: const Text('Pesquisar Nome'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final tipoBusca = controller.text.trim().toLowerCase();
+
+                      if (tipoBusca.isNotEmpty) {
+                        context
+                            .read<PokemonProvider>()
+                            .carregarPokemonsTipo(tipoBusca);
+                      }
+                    },
+                    child: const Text('Pesquisar Tipo'),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                final nomeBusca = controllerNome.text.trim().toLowerCase();
-                if (nomeBusca.isNotEmpty) {
-                  context
-                      .read<PokemonProvider>()
-                      .carregarDetalhesNome(nomeBusca);
-                }
-              },
-              child: const Text('Buscar Pokémon por Nome'),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.read<PokemonProvider>().carregarPokemons();
+                },
+                child: const Text('Buscar Todos'),
+              ),
             ),
             const SizedBox(height: 20),
-
-            // Exibe o carregando
-            if (provider.carregando) const CircularProgressIndicator(),
-
-            // Exibe o card apenas se NÃO estiver carregando E houver um Pokémon selecionado
-            if (!provider.carregando && provider.pokemonSelecionado != null)
-              Card(
-                child: ListTile(
-                  leading: Image.network(
-                    provider.pokemonSelecionado!['imagem'] ?? '',
-                    width: 60,
-                  ),
-                  title: Text(
-                    provider.pokemonSelecionado!['nome']
-                        .toString()
-                        .toUpperCase(),
-                  ),
-                  subtitle: Text(
-                    'Tipos: ${(provider.pokemonSelecionado!['tipos'] as List).join(', ')}',
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return TelaDetalhesPokemon(
-                            idPokemon: provider.pokemonSelecionado!['id'],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            SizedBox(
-              height: 20,
+            Expanded(
+              child: Resultado(provider: provider,),
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.read<PokemonProvider>().carregarPokemons();
-              },
-              child: const Text(
-                'Buscar Pokémon',
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            if (provider.carregando) const CircularProgressIndicator(),
-            if (!provider.carregando)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: provider.pokemons.length,
-                  itemBuilder: (context, index) {
-                    final pokemon = provider.pokemons[index];
-
-                    return Card(
-                      child: ListTile(
-                        leading: Image.network(
-                          pokemon['imagem'],
-                          width: 60,
-                        ),
-                        title: Text(
-                          pokemon['nome'].toString().toUpperCase(),
-                        ),
-                        subtitle: Text(
-                          'Tipo: ${pokemon['tipo']}',
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return TelaDetalhesPokemon(
-                                  idPokemon: pokemon['id'],
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
           ],
         ),
       ),

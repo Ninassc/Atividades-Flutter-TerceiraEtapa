@@ -87,6 +87,18 @@ class _TelaDetalhesPokemonState extends State<TelaDetalhesPokemon> {
                               ),
                             ),
 
+                             Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Ordem = ${pokemon['ordem']}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+
                             // Imagem
                             Container(
                               width: 200,
@@ -415,6 +427,37 @@ class _TelaDetalhesPokemonState extends State<TelaDetalhesPokemon> {
                                   );
                                 },
                               ).toList(),
+                            ),
+
+                            const SizedBox(
+                              height: 15,
+                            ),
+
+                            const Text(
+                              'Movimentos',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 15,
+                            ),
+
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                            
+                              children: [
+                                ...(pokemon["movimentos"] as List).map((move) {
+                                  return Chip(
+                                    label: Text(
+                                      move.toString(),
+                                    ),
+                                  );
+                                }),
+                              ],
                             ),
 
                             const SizedBox(

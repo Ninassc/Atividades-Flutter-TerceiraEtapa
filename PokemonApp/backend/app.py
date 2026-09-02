@@ -38,6 +38,18 @@ def listar_pokemons():
 
     return jsonify(pokemons)
 
+@app.route("/pokemons/<tipo>", methods=["GET"])
+def listar_pokemons_tipo(tipo):
+    pokemons = listar_pokemons().get_json()
+
+    filtro_tipo = []
+
+    for pokemon in pokemons:
+        if pokemon["tipo"] == tipo:
+            filtro_tipo.append(pokemon)
+
+    return jsonify(filtro_tipo)
+
 
 # DETALHES DE UM POKÉMON
 @app.route("/pokemons/<int:id>", methods=["GET"])
@@ -71,6 +83,14 @@ def detalhes_pokemon(id):
         )
 
 
+    movimentos = []
+
+    for move in dados["moves"]:
+        movimentos.append(
+            move["move"]["name"]
+        )
+
+
     pokemon = {
         "id": dados["id"],
         "nome": dados["name"],
@@ -82,7 +102,9 @@ def detalhes_pokemon(id):
         "habilidades": habilidades,
         "hp": dados["stats"][0]["base_stat"],
         "ataque": dados["stats"][1]["base_stat"],
-        "defesa": dados["stats"][2]["base_stat"]
+        "defesa": dados["stats"][2]["base_stat"],
+        "ordem" : dados["order"],
+        "movimentos" : movimentos
     }
 
     return jsonify(pokemon)

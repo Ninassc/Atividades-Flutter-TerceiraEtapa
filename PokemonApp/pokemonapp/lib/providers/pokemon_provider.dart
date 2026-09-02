@@ -4,19 +4,43 @@ import '../services/pokemon_service.dart';
 
 class PokemonProvider extends ChangeNotifier {
   List<dynamic> pokemons = [];
+  List<dynamic> pokemonsTipo = [];
 
   Map<String, dynamic>? pokemonSelecionado;
+  Map<String, dynamic>? pokemonNome;
 
   bool carregando = false;
+  bool carregandoEspecifico = false;
+  bool carregandoTipo = false;
 
   Future<void> carregarPokemons() async {
     carregando = true;
+
+    // Limpa pesquisas anteriores
+    pokemonNome = null;
+    pokemonsTipo = [];
 
     notifyListeners();
 
     pokemons = await PokemonService.buscarPokemons();
 
     carregando = false;
+
+    notifyListeners();
+  }
+
+  Future<void> carregarPokemonsTipo(String tipo) async {
+    carregandoTipo = true;
+
+    // Limpa pesquisas anteriores
+    pokemonNome = null;
+    pokemons = [];
+
+    notifyListeners();
+
+    pokemonsTipo = await PokemonService.buscarPokemonsTipo(tipo);
+
+    carregandoTipo = false;
 
     notifyListeners();
   }
@@ -42,18 +66,25 @@ class PokemonProvider extends ChangeNotifier {
   Future<void> carregarDetalhesNome(
     String nome,
   ) async {
-    carregando = true;
+    carregandoEspecifico = true;
 
-    pokemonSelecionado = null;
+    pokemonNome = null;
+    pokemons = [];
+    pokemonsTipo = [];
 
     notifyListeners();
 
-    pokemonSelecionado = await PokemonService.buscarDetalhesNome(
+    pokemonNome = await PokemonService.buscarDetalhesNome(
       nome,
     );
 
-    carregando = false;
+    carregandoEspecifico = false;
 
+    notifyListeners();
+  }
+
+  void limparPokemonSelecionado() {
+    pokemonSelecionado = null;
     notifyListeners();
   }
 }

@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(DevicePreview(builder: (context) => ChangeNotifierProvider(create: (context) => VooProvider(),
-  child: MyApp(),)));
+  runApp(DevicePreview(
+      builder: (context) => ChangeNotifierProvider(
+            create: (context) => VooProvider(),
+            child: MyApp(),
+          )));
 }
 
 class MyApp extends StatelessWidget {

@@ -9,24 +9,26 @@ class VooProvider extends ChangeNotifier {
 
   Map<String, dynamic>? vooSelecionado;
 
-  Future<void> carregarVoos() async {
+  Future<void> carregarVoos(String aeroporto, String tipo) async {
     carregando = true;
 
     notifyListeners();
 
-    voos = await VooService.buscarVoos();
+    voos = await VooService.buscarVoos(aeroporto, tipo);
 
     carregando = false;
 
     notifyListeners();
   }
 
-  Future<void> carregarDetalhes(String identificacao) async {
+  Future<void> carregarDetalhes(
+      String aeroporto, String tipo, String identificacao) async {
     carregandoDetalhes = true;
 
     notifyListeners();
 
-    vooSelecionado = await VooService.buscarDetalhesVoo(identificacao);
+    vooSelecionado =
+        await VooService.buscarDetalhesVoo(aeroporto, tipo, identificacao);
 
     carregandoDetalhes = false;
 

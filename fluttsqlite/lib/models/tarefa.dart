@@ -1,7 +1,7 @@
 class Tarefa {
-  final int id;
-  final String titulo;
-  final bool concluida;
+  int? id;
+  String titulo;
+  bool concluida;
 
-  Tarefa({required this.id, required this.titulo, required this.concluida});
+  Tarefa({this.id, required this.titulo, required this.concluida});
 }

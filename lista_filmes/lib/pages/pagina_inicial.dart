@@ -74,6 +74,12 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   final filme = filmeViewModel.filmes[index];
 
                   return Card(
+                    color: Color.fromARGB(255, 27, 27, 27).withAlpha(100),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: Color.fromARGB(255, 27, 27, 27), width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: ListTile(
                       leading: CircleAvatar(
                         child: Text(
@@ -91,6 +97,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                           decoration: filme.assistido
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
+                              color: Colors.white
                         ),
                       ),
 

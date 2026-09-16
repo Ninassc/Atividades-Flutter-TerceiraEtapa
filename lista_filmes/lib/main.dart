@@ -37,6 +37,34 @@ class MeuApp extends StatelessWidget {
 
         locale: DevicePreview.locale(context),
 
+        theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            backgroundColor: const Color.fromARGB(255, 19, 18, 18),
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 24
+            )
+          ),
+
+          textTheme: TextTheme(
+            bodyMedium: TextStyle(
+              color: Colors.white
+            ),
+            titleMedium: TextStyle(
+              color: Colors.white
+            ),
+            bodyLarge: TextStyle(
+              color: Colors.white
+            )
+          ),
+
+          inputDecorationTheme: InputDecorationTheme(
+            
+          ),
+
+          scaffoldBackgroundColor: const Color.fromARGB(255, 32, 31, 31)
+        ),
+
         home: const PaginaInicial(),
       ),
     );

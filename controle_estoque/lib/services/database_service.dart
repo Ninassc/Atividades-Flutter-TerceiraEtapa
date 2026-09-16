@@ -17,7 +17,7 @@ class DatabaseService {
       caminho,
 
       //versão atual do banco
-      version: 1,
+      version: 2,
 
       //Executa quando o banco é criado pela primeira vez
       onCreate: (db, version) async {
@@ -25,8 +25,8 @@ class DatabaseService {
           CREATE TABLE usuarios(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
-            email TEXT NOT NULL,
-            senha TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            senha TEXT NOT NULL
           )
         ''');
 

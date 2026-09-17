@@ -6,19 +6,14 @@ import 'package:controle_estoque/widgets/campo_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerSenha = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
+    TextEditingController controllerEmail = TextEditingController();
+    TextEditingController controllerSenha = TextEditingController();
+    
     final authViewModel = Provider.of<UsuarioViewmodel>(context);
 
     return Scaffold(
@@ -69,10 +64,10 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => HomePage()));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Email ou Senha Inválidos")));
                         }
-
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Email ou Senha Inválidos")));
                       }
                     }),
               ),

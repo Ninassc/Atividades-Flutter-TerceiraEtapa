@@ -69,7 +69,7 @@ class _LoginPageState extends State<CadastroPage> {
                             controllerEmail.text,
                             controllerSenha.text);
 
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         if (cadastro) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

@@ -2,15 +2,17 @@ import 'package:controle_estoque/models/produto.dart';
 import 'package:controle_estoque/services/database_service.dart';
 
 class ProdutoService {
-  Future<void> cadastrarProduto(Produto produto) async {
+  Future<bool> cadastrarProduto(Produto produto) async {
     final db = await DatabaseService().abrirBanco();
 
-    await db.insert('produtos', {
+    final resultado = await db.insert('produtos', {
       'nome': produto.nome,
       'categoria': produto.categoria,
       'quantidade': produto.quantidade,
       'preco': produto.preco
     });
+
+    return resultado > 0;
   }
 
   Future<List<Produto>> listarProdutos() async {
@@ -35,10 +37,13 @@ class ProdutoService {
         where: 'id = ?', whereArgs: [produto.id]);
   }
 
-  Future<void> deletarProduto(Produto produto) async {
+  Future<bool> deletarProduto(Produto produto) async {
     final db = await DatabaseService().abrirBanco();
 
-    await db.delete('produtos', where: 'id = ?', whereArgs: [produto.id]);
+    final resultado =
+        await db.delete('produtos', where: 'id = ?', whereArgs: [produto.id]);
+
+    return resultado > 0;
   }
 
   Future<void> mostrarProdutosNoTerminal() async {

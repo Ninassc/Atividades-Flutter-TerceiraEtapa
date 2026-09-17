@@ -50,10 +50,13 @@ class MyApp extends StatelessWidget {
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepOrange),
-                iconTheme: IconThemeData(
-                  color: Colors.white
-                ),
-          )),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+          cardTheme: CardThemeData(
+              color: const Color.fromARGB(255, 34, 34, 34).withAlpha(100),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(20),
+                  side: BorderSide(color: Colors.deepOrange, width: 2)))),
       home: LoginPage(),
     );
   }

@@ -12,19 +12,25 @@ class ProdutoViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> cadastrarProduto(
+  Future<bool> cadastrarProduto(
       String nome, String categoria, int quantidade, double preco) async {
     if (nome.isEmpty) {
-      return;
+      return false;
     }
 
-    await _service.cadastrarProduto(Produto(
+    final resultado = await _service.cadastrarProduto(Produto(
         nome: nome,
         categoria: categoria,
         quantidade: quantidade,
         preco: preco));
 
-    carregarProdutos();
+    if (resultado) {
+      carregarProdutos();
+
+      return true;
+    }
+
+    return false;
   }
 
   Future<void> alterarQuantidade(Produto produto, int novaQuantidade) async {
@@ -37,10 +43,15 @@ class ProdutoViewmodel extends ChangeNotifier {
     await carregarProdutos();
   }
 
-  Future<void> deletarProduto(Produto produto) async {
-    await _service.deletarProduto(produto);
+  Future<bool> deletarProduto(Produto produto) async {
+    final resultado = await _service.deletarProduto(produto);
 
-    await carregarProdutos();
+    if (resultado) {
+      await carregarProdutos();
+      return true;
+    }
+
+    return false;
   }
 
   Future<void> testarBancoNoTerminal() async {

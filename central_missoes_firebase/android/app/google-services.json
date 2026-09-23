@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490081542396",
+    "project_id": "centralmissoes-f0580",
+    "storage_bucket": "centralmissoes-f0580.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490081542396:android:e7e2d2539232ce1aa57779",
+        "android_client_info": {
+          "package_name": "com.example.central_missoes_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPW4TAogpUXpSDTp_bPP8_lgJVKhZztLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

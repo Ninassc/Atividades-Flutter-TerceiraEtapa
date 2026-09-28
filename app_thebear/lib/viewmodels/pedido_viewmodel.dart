@@ -36,7 +36,7 @@ class PedidoViewmodel extends ChangeNotifier {
     );
 
     if (resultado) {
-      carregarPedidos();
+      await carregarPedidos();
       return true;
     }
 
@@ -45,14 +45,14 @@ class PedidoViewmodel extends ChangeNotifier {
 
   Future<void> finalizarPedido(Pedido pedido) async {
     await _service.finalizarPedido(pedido);
-    carregarPedidos();
+    await carregarPedidos();
   }
 
   Future<bool> excluirPedido(Pedido pedido) async {
     final resultado = await _service.excluirPedido(pedido);
 
     if (resultado) {
-      carregarPedidos();
+      await carregarPedidos();
       return true;
     }
 

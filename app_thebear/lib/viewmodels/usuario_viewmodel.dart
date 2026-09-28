@@ -30,7 +30,7 @@ class UsuarioViewmodel extends ChangeNotifier {
     );
 
     if (resultado) {
-      carregarUsuarios();
+      await carregarUsuarios();
       return true;
     }
 

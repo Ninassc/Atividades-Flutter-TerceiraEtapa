@@ -15,12 +15,8 @@ class _CadastroPageState extends State<CadastroPage> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
 
-  bool _salvando = false;
-
   Future<void> _cadastrar() async {
     if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _salvando = true);
 
     try {
       final viewmodel = context.read<UsuarioViewmodel>();
@@ -57,9 +53,7 @@ class _CadastroPageState extends State<CadastroPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao cadastrar usuário.')),
       );
-    } finally {
-      if (mounted) setState(() => _salvando = false);
-    }
+    } 
   }
 
   @override
@@ -72,6 +66,8 @@ class _CadastroPageState extends State<CadastroPage> {
 
   @override
   Widget build(BuildContext context) {
+    final usuarioViewModel = context.watch<UsuarioViewmodel>();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Cadastro')),
       body: Center(
@@ -112,8 +108,8 @@ class _CadastroPageState extends State<CadastroPage> {
                   ),
                   const SizedBox(height: 20),
                   FilledButton(
-                    onPressed: _salvando ? null : _cadastrar,
-                    child: Text(_salvando ? 'Salvando...' : 'Cadastrar'),
+                    onPressed: usuarioViewModel.salvando ? null : _cadastrar,
+                    child: Text(usuarioViewModel.salvando ? 'Salvando...' : 'Cadastrar'),
                   ),
                 ],
               ),

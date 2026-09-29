@@ -11,6 +11,7 @@ class UsuarioViewmodel extends ChangeNotifier {
 
   bool carregandoUsuarios = false;
   bool carregandoBuscar = false;
+  bool salvando = false;
 
   Future<void> carregarUsuarios() async {
     carregandoUsuarios = true;
@@ -25,9 +26,16 @@ class UsuarioViewmodel extends ChangeNotifier {
   }
 
   Future<bool> cadastrarUsuario(String nome, String email, String senha) async {
+    salvando = true;
+    notifyListeners();
+
+
     final resultado = await _service.cadastrarUsuario(
       Usuario(nome: nome, email: email, senha: senha),
     );
+
+    salvando = false;
+    notifyListeners();
 
     if (resultado) {
       await carregarUsuarios();

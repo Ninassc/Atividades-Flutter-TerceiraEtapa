@@ -48,12 +48,13 @@ class _CadastroPageState extends State<CadastroPage> {
           const SnackBar(content: Text('Não foi possível criar a conta.')),
         );
       }
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('Erro no cadastro: $e\n$st');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao cadastrar usuário.')),
       );
-    } 
+    }
   }
 
   @override
@@ -82,34 +83,35 @@ class _CadastroPageState extends State<CadastroPage> {
                 children: [
                   TextFormField(
                     controller: _nomeController,
-                    decoration: const InputDecoration(labelText: 'Nome completo'),
-                    validator: (valor) =>
-                        valor == null || valor.trim().isEmpty
-                            ? 'Informe seu nome'
-                            : null,
+                    decoration: const InputDecoration(
+                      labelText: 'Nome completo',
+                    ),
+                    validator: (valor) => valor == null || valor.trim().isEmpty
+                        ? 'Informe seu nome'
+                        : null,
                   ),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(labelText: 'E-mail'),
-                    validator: (valor) =>
-                        valor == null || !valor.contains('@')
-                            ? 'Informe um e-mail válido'
-                            : null,
+                    validator: (valor) => valor == null || !valor.contains('@')
+                        ? 'Informe um e-mail válido'
+                        : null,
                   ),
                   TextFormField(
                     controller: _senhaController,
                     obscureText: true,
                     decoration: const InputDecoration(labelText: 'Senha'),
-                    validator: (valor) =>
-                        valor == null || valor.isEmpty
-                            ? 'Informe uma senha'
-                            : null,
+                    validator: (valor) => valor == null || valor.isEmpty
+                        ? 'Informe uma senha'
+                        : null,
                   ),
                   const SizedBox(height: 20),
                   FilledButton(
                     onPressed: usuarioViewModel.salvando ? null : _cadastrar,
-                    child: Text(usuarioViewModel.salvando ? 'Salvando...' : 'Cadastrar'),
+                    child: Text(
+                      usuarioViewModel.salvando ? 'Salvando...' : 'Cadastrar',
+                    ),
                   ),
                 ],
               ),

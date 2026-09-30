@@ -25,7 +25,7 @@ class Pedido {
       cliente: json['cliente'] as String,
       prato: json['prato'] as String,
       quantidade: json['quantidade'] as int,
-      valorUnitario: json['valorUnitario'] as double,
+      valorUnitario: json['valor_unitario'] as double,
       status: json['status'] as String,
     );
   }

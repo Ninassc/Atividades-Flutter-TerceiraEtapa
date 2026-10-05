@@ -8,7 +8,7 @@ class MissaoProvider extends ChangeNotifier {
   List<Missao> missoes = [];
   bool carregandoMissoes = false;
 
-  void carregarTarefas() {
+  void carregarMissoes() {
     carregandoMissoes = false;
     notifyListeners();
     try {
@@ -33,13 +33,16 @@ class MissaoProvider extends ChangeNotifier {
     if (dificuldade == 'difícil') pontos = 30;
 
     await _service.adicionarMissao(titulo.trim(), dificuldade.trim(), pontos);
+    carregarMissoes();
   }
 
   Future<void> alterarStatus(Missao missao) async {
     await _service.concluirMissao(missao);
+    carregarMissoes();
   }
 
   Future<void> excluirMissao(String id) async {
     await _service.excluirMissao(id);
+    carregarMissoes();
   }
 }

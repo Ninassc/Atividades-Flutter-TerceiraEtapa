@@ -16,9 +16,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Inicia a escuta dos dados ao carregar a tela
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MissaoProvider>(context, listen: false).carregarTarefas();
+      Provider.of<MissaoProvider>(context, listen: false).carregarMissoes();
     });
   }
 
@@ -32,94 +31,84 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Nova Missão',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Nova Missão',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _tituloController,
+                decoration: const InputDecoration(
+                  labelText: 'Título da Missão',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                initialValue: _dificuldadeSelecionada,
+                decoration: const InputDecoration(
+                  labelText: 'Dificuldade',
+                  border: OutlineInputBorder(),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'fácil',
+                    child: Text('Fácil'),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _tituloController,
-                    decoration: const InputDecoration(
-                      labelText: 'Título da Missão',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.assignment),
-                    ),
+                  DropdownMenuItem(
+                    value: 'médio',
+                    child: Text('Médio'),
                   ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: _dificuldadeSelecionada,
-                    decoration: const InputDecoration(
-                      labelText: 'Dificuldade',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.speed),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'fácil',
-                        child: Text('Fácil (10 pts)'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'médio',
-                        child: Text('Médio (20 pts)'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'difícil',
-                        child: Text('Difícil (30 pts)'),
-                      ),
-                    ],
-                    onChanged: (valor) {
-                      if (valor != null) {
-                        setModalState(() {
-                          _dificuldadeSelecionada = valor;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: const Text('Cadastrar Missão'),
-                    onPressed: () async {
-                      if (_tituloController.text.trim().isNotEmpty) {
-                        await Provider.of<MissaoProvider>(context, listen: false)
-                            .cadastrarMissao(
-                          _tituloController.text,
-                          _dificuldadeSelecionada,
-                        );
-                        _tituloController.clear();
-                        if (mounted) Navigator.pop(context);
-                      }
-                    },
+                  DropdownMenuItem(
+                    value: 'difícil',
+                    child: Text('Difícil'),
                   ),
                 ],
+                onChanged: (valor) {
+                  if (valor != null) {
+                    setState(() {
+                      _dificuldadeSelecionada = valor;
+                    });
+                  }
+                },
               ),
-            );
-          },
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_tituloController.text.isNotEmpty) {
+                    await Provider.of<MissaoProvider>(
+                      context,
+                      listen: false,
+                    ).cadastrarMissao(
+                      _tituloController.text,
+                      _dificuldadeSelecionada,
+                    );
+
+                    _tituloController.clear();
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                child: const Text('Cadastrar'),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -140,6 +129,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final missaoProvider = Provider.of<MissaoProvider>(context);
+    int pontos = 0;
+    for (var missao in missaoProvider.missoes) {
+      if (missao.concluida) {
+        pontos += missao.pontos;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Central de Missões'),
@@ -147,136 +144,154 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      body: Consumer<MissaoProvider>(
-        builder: (context, provider, child) {
-          if (provider.carregandoMissoes) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (provider.missoes.isEmpty) {
-            return const Center(
-              child: Text(
-                'Nenhuma missão cadastrada ainda!',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            );
-          }
-
-          // Cálculo do total de pontos de missões concluídas
-          final pontosTotais = provider.missoes
-              .where((m) => m.concluida)
-              .fold(0, (sum, m) => sum + m.pontos);
-
-          return Column(
-            children: [
-              // Card com pontuação total
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.deepPurple.shade200),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: missaoProvider.carregandoMissoes
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : missaoProvider.missoes.isEmpty
+              ? Center(
+                  child: Text(
+                    'Nenhuma missão cadastrada ainda!',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+              : Column(
                   children: [
-                    const Text(
-                      'Pontos Acumulados:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.deepPurple.shade200),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Pontos Acumulados:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Chip(
+                            avatar: const Icon(Icons.star, color: Colors.amber),
+                            label: Text(
+                              '$pontos pts',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            backgroundColor: Colors.amber.shade100,
+                          ),
+                        ],
                       ),
                     ),
-                    Chip(
-                      avatar: const Icon(Icons.star, color: Colors.amber),
-                      label: Text(
-                        '$pontosTotais pts',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+
+                    // Lista de Missões
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: missaoProvider.missoes.length,
+                        itemBuilder: (context, index) {
+                          final missao = missaoProvider.missoes[index];
+
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
+                            child: ListTile(
+                              leading: Checkbox(
+                                value: missao.concluida,
+                                activeColor: Colors.deepPurple,
+                                onChanged: (_) {
+                                  missaoProvider.alterarStatus(missao);
+                                },
+                              ),
+                              title: Text(
+                                missao.titulo,
+                                style: TextStyle(
+                                  decoration: missao.concluida
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  color: missao.concluida
+                                      ? Colors.grey
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          _getCorDificuldade(missao.dificuldade)
+                                              .withAlpha(50),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      missao.dificuldade.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: _getCorDificuldade(
+                                            missao.dificuldade),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  missao.dificuldade == "fácil"
+                                      ? Icon(Icons.star, color: Colors.yellow)
+                                      : missao.dificuldade == 'médiia'
+                                          ? Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.star,
+                                                  color: Colors.yellow,
+                                                ),
+                                                Icon(Icons.star,
+                                                    color: Colors.yellow)
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Icon(Icons.star,
+                                                    color: Colors.yellow),
+                                                Icon(Icons.star,
+                                                    color: Colors.yellow),
+                                                Icon(Icons.star,
+                                                    color: Colors.yellow)
+                                              ],
+                                            ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '+${missao.pontos} pts',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete_outline,
+                                    color: Colors.red),
+                                onPressed: () {
+                                  missaoProvider.excluirMissao(missao.id);
+                                },
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      backgroundColor: Colors.amber.shade100,
                     ),
                   ],
                 ),
-              ),
-              
-              // Lista de Missões
-              Expanded(
-                child: ListView.builder(
-                  itemCount: provider.missoes.length,
-                  itemBuilder: (context, index) {
-                    final missao = provider.missoes[index];
-
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 6,
-                      ),
-                      child: ListTile(
-                        leading: Checkbox(
-                          value: missao.concluida,
-                          activeColor: Colors.deepPurple,
-                          onChanged: (_) {
-                            provider.alterarStatus(missao);
-                          },
-                        ),
-                        title: Text(
-                          missao.titulo,
-                          style: TextStyle(
-                            decoration: missao.concluida
-                                ? TextDecoration.lineThrough
-                                : null,
-                            color: missao.concluida ? Colors.grey : Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: _getCorDificuldade(missao.dificuldade)
-                                    .withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                missao.dificuldade.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: _getCorDificuldade(missao.dificuldade),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '+${missao.pontos} pts',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.red),
-                          onPressed: () {
-                            provider.excluirMissao(missao.id);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _abrirModalNovaMissao,
         backgroundColor: Colors.deepPurple,

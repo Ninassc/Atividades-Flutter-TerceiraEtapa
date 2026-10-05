@@ -8,33 +8,52 @@ class IdeiaViewmodel extends ChangeNotifier {
   List<Ideia> ideias = [];
   bool carregandoIdeias = false;
 
-  void carregarIdeias() {
-    carregandoIdeias = false;
-    notifyListeners();
-    try {
-      _service.listarIdeias().listen((lista) {
-        ideias = lista;
-      });
-    } catch (e) {
-      carregandoIdeias = false;
-      notifyListeners();
-    }
+  IdeiaViewmodel() {
+    carregarIdeias();
   }
 
-  Future<void> cadastrarIdeia(String titulo ,String descricao, String autor) async {
-    if (autor.trim().isEmpty || descricao.trim().isEmpty) {
+  void carregarIdeias() {
+    carregandoIdeias = true;
+    notifyListeners();
+
+    _service.listarIdeias().listen(
+      (lista) {
+        ideias = lista;
+        carregandoIdeias = false;
+        notifyListeners();
+      },
+      onError: (erro) {
+        carregandoIdeias = false;
+        notifyListeners();
+
+        debugPrint('Erro ao carregar ideias: $erro');
+      },
+    );
+  }
+
+  Future<void> cadastrarIdeia(
+    String titulo,
+    String descricao,
+    String autor,
+  ) async {
+    if (titulo.trim().isEmpty ||
+        descricao.trim().isEmpty ||
+        autor.trim().isEmpty) {
       return;
     }
 
-    int votos = 0;
+    await _service.adicionarIdeia(
+      titulo.trim(),
+      descricao.trim(),
+      autor.trim(),
+      0,
+    );
 
-    await _service.adicionarIdeia(titulo.trim() ,descricao.trim(), autor.trim(), votos);
     carregarIdeias();
   }
 
   Future<void> votarIdeia(Ideia ideia) async {
     await _service.votarIdeia(ideia);
-    carregarIdeias();
   }
 
   Future<void> excluirIdeia(String id) async {
@@ -44,7 +63,10 @@ class IdeiaViewmodel extends ChangeNotifier {
 
   Ideia? get ideiaMaisVotada {
     if (ideias.isEmpty) return null;
-    return ideias.reduce((atual, proxima) =>
-        atual.quantidadeVotos >= proxima.quantidadeVotos ? atual : proxima);
+
+    return ideias.reduce(
+      (atual, proxima) =>
+          atual.quantidadeVotos >= proxima.quantidadeVotos ? atual : proxima,
+    );
   }
 }

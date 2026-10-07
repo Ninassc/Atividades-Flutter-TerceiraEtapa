@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "754943240334",
+    "project_id": "authfire-bb03d",
+    "storage_bucket": "authfire-bb03d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754943240334:android:ad7e6ccb7e8597d9f6c1df",
+        "android_client_info": {
+          "package_name": "com.example.fire_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754943240334-3u0slkkolt07rqcodhij2hp4d839strp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVcprR8mtlh7maSXcFcXro0riMMHTqXas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754943240334-3u0slkkolt07rqcodhij2hp4d839strp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

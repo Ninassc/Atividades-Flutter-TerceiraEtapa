@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "952090990185",
+    "project_id": "muralapp-e0904",
+    "storage_bucket": "muralapp-e0904.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952090990185:android:e9337ef05a493aa2b6b4f8",
+        "android_client_info": {
+          "package_name": "com.example.muralapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQQxWSgZnSjS32aYQQSP805g5v0gejISI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

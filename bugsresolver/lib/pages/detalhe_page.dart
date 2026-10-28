@@ -21,7 +21,7 @@ class _DetalhePageState extends State<DetalhePage> {
   }
 
   Future<void> enviar() async {
-    if (pista.text.trim().isNotEmpty) return;
+    if (pista.text.trim().isEmpty) return;
     try {
       await service.enviarPista(widget.ocorrencia.id, pista.text);
       pista.clear();

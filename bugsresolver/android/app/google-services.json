@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "908313138528",
+    "project_id": "operacaoresgate-38f6d",
+    "storage_bucket": "operacaoresgate-38f6d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908313138528:android:2d18580fba51879b7eba05",
+        "android_client_info": {
+          "package_name": "com.example.bugsresolver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908313138528-ul3oji3pqdskqt5gmv0dg5vuj0al85pl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU0iDn7otkU9v2sasGC_lJQWVzGK_zwXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908313138528-ul3oji3pqdskqt5gmv0dg5vuj0al85pl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "908313138528-hfr53t2c8df1ubnq0h5q0vi7q7ufpuna.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bugsresolver"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
